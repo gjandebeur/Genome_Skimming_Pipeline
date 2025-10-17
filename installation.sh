@@ -1,5 +1,17 @@
-First install dorado, minimap2, and modkit softwares.
-^ Start by setting up apptainer environment within your scratch directory
+#!/bin/bash
+#SBATCH --partition=normal
+#SBATCH --job-name=software_installation
+#SBATCH --output=installation_script_output.txt
+#SBATCH --error=installation_script_err.txt
+#SBATCH --cpus-per-task=4
+#SBATCH --time=24:00:00           
+#SBATCH --mem=16G  
+
+echo "linking the Conda environment to $ENV_PATH..."
+source /opt/oscer/software/Mamba/23.1.0-4/etc/profile.d/conda.sh
+
+#First install dorado, minimap2, and modkit softwares.
+#^ Start by setting up apptainer environment within your scratch directory
 
 ##Add this into script to create the apptainer cache in your scratch directory.
 
