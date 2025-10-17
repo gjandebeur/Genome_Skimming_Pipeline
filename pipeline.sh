@@ -1,6 +1,3 @@
-
-Script is set up to only have to change top user inputs. Will need alterations to work on DNA (dorado model, reference, modkit codes)
-```
 #!/bin/bash
 #SBATCH --partition=normal
 #SBATCH --job-name=nanopore_pipeline
