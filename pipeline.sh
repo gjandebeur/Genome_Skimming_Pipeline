@@ -1,11 +1,15 @@
 #!/bin/bash
 #SBATCH --partition=normal
-#SBATCH --job-name=nanopore_pipeline
-#SBATCH --time=72:00:00
-#SBATCH --nodes=1
+#SBATCH --job-name=modification_pipeline
+#SBATCH --output=modificationpipeline_output.txt
+#SBATCH --error=modificationpipeline_debug.txt
 #SBATCH --cpus-per-task=8
-#SBATCH --mem=64G
-#SBATCH --gres=gpu:1
+#SBATCH --time=12:00:00           
+#SBATCH --mem=16G  
+
+#setting for conda env
+echo "linking the Conda environment to $ENV_PATH..."
+source /opt/oscer/software/Mamba/23.1.0-4/etc/profile.d/conda.sh
 
 # ==================== USER INPUTS ====================
 # Sample info
