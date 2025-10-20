@@ -1,0 +1,69 @@
+#!/usr/bin/env Rscript
+
+input_file <- "/ourdisk/hpc/rnafold/gjandebeur/dont_archive/batch/hbec_6r1a_8mod_filtered_pileup.bed"
+output_file <- "/ourdisk/hpc/rnafold/gjandebeur/dont_archive/batch/hbec_6r1a_8mod_filtered_pileup_counts.bed"
+
+col_names <- c("chrom", "start", "end", "code", "score", "strand",
+               "start_1", "end_1", "color", "n_valid_cov", "percent_modified",
+               "n_mod_reads", "n_canonical_reads", "n_other_mod_reads",
+               "n_deletion_readds", "n_fail_reads", "n_diff_reads", "n_nocall_reads")
+
+# --- Load file ---
+mod_data <- read.table(input_file, header = FALSE, sep = "\t", stringsAsFactors = FALSE)
+colnames(mod_data) <- col_names
+
+# --- Filter low coverage ---
+mod_data$n_valid_cov <- as.numeric(mod_data$n_valid_cov)
+mod_data <- mod_data[mod_data$n_valid_cov >= 10 & mod_data$code != "0", ]
+
+# --- Remove duplicate sites ---
+mod_data <- mod_data[!duplicated(mod_data[, c("chrom", "start", "end", "code")]), ]
+
+# --- Separate code into code/motif/offset ---
+split_code <- strsplit(mod_data$code, ",")
+split_matrix <- do.call(rbind, split_code)
+mod_data$code   <- split_matrix[, 1]
+mod_data$motif  <- split_matrix[, 2]
+mod_data$offset <- split_matrix[, 3]
+
+# --- Filter for valid code + motif combos ---
+valid_rows <- (
+  (mod_data$code == "a"      & mod_data$motif == "A") |
+  (mod_data$code == "m"      & mod_data$motif == "C") |
+  (mod_data$code == "17596"  & mod_data$motif == "A") |
+  (mod_data$code == "69426"  & mod_data$motif == "A") |
+  (mod_data$code == "19228"  & mod_data$motif == "C") |
+  (mod_data$code == "19229"  & mod_data$motif == "G") |
+  (mod_data$code == "17802"  & mod_data$motif == "T") |
+  (mod_data$code == "19227"  & mod_data$motif == "T")
+)
+mod_data <- mod_data[valid_rows, ]
+
+# --- Assign mod names ---
+mod_data$mod <- NA
+mod_data$mod[mod_data$code == "a"]      <- "m6A"
+mod_data$mod[mod_data$code == "m"]      <- "m5C"
+mod_data$mod[mod_data$code == "17596"]  <- "inosine"
+mod_data$mod[mod_data$code == "69426"]  <- "2'O-Me A"
+mod_data$mod[mod_data$code == "19228"]  <- "2'O-Me C"
+mod_data$mod[mod_data$code == "19229"]  <- "2'O-Me G"
+mod_data$mod[mod_data$code == "17802"]  <- "pseU"
+mod_data$mod[mod_data$code == "19227"]  <- "2'O-Me U"
+
+# --- Warn on unknown codes ---
+unknown_codes <- unique(mod_data$code[is.na(mod_data$mod)])
+if (length(unknown_codes) > 0) {
+  cat("?? Unknown modification codes found:\n")
+  print(unknown_codes)
+}
+
+# --- Count mods ---
+mod_counts <- as.data.frame(table(mod_data$mod))
+colnames(mod_counts) <- c("mod", "count")
+
+# --- Print and write ---
+cat("? Modification counts:\n")
+print(mod_counts)
+
+write.csv(mod_counts, output_file, row.names = FALSE)
+cat(sprintf("?? Results saved to: %s\n", output_file))
