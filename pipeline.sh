@@ -4,11 +4,11 @@
 #SBATCH --output=modificationpipeline_output.txt
 #SBATCH --error=modificationpipeline_debug.txt
 #SBATCH --cpus-per-task=8
-#SBATCH --time=12:00:00           
-#SBATCH --mem=16G  
+#SBATCH --time=12:00:00
+#SBATCH --mem=16G
 
-#setting for conda env
-echo "linking the Conda environment to $ENV_PATH..."
+# Setting for Conda env
+echo "Linking the Conda environment to $ENV_PATH..."
 source /opt/oscer/software/Mamba/23.1.0-4/etc/profile.d/conda.sh
 
 # ==================== USER INPUTS ====================
@@ -36,6 +36,11 @@ MIN_QSCORE=10
 # Alignment parameters
 ALIGNMENT_TYPE="rna"  # Options: "rna" or "dna"
 THREADS=8
+
+# ModKit pileup parameters
+MODKIT_THRESHOLDS=("a:0.99" "17802:0.99" "17596:0.99" "69426:0.99" "19228:0.99" "m:0.99" "19229:0.99" "19227:0.99")
+MOTIFS=("A 0" "T 0" "C 0" "G 0")
+
 # =====================================================
 
 # Create output directory
@@ -46,6 +51,7 @@ BASECALLED_BAM="${OUTPUT_DIR}/${SAMPLE_NAME}_basecalled.bam"
 FASTQ_FILE="${OUTPUT_DIR}/${SAMPLE_NAME}_basecalled.fastq"
 SAM_FILE="${OUTPUT_DIR}/${SAMPLE_NAME}_aligned.sam"
 SORTED_BAM="${OUTPUT_DIR}/${SAMPLE_NAME}_aligned_sorted.bam"
+PILEUP_BED="${OUTPUT_DIR}/${SAMPLE_NAME}_pileup.bed"
 
 echo "=========================================="
 echo "Nanopore RNA-seq Pipeline"
@@ -55,7 +61,6 @@ echo "=========================================="
 
 # ==================== BASECALLING ====================
 echo "[$(date)] Step 1: Basecalling..."
-
 module load GCC PyTorch FlexiBLAS/3.3.1-GCC-12.3.0 FFmpeg/4.4.2-GCCcore-11.3.0 HTSlib protobuf
 
 export APPTAINER_CACHEDIR=/scratch/$USER/apptainer_cache
@@ -78,13 +83,10 @@ echo "[$(date)] Basecalling complete!"
 
 # ==================== ALIGNMENT ====================
 echo "[$(date)] Step 2: Converting to FASTQ..."
-
 module load SAMtools/1.16.1-GCC-11.3.0
-
 samtools fastq -@ ${THREADS} -T "*" "${BASECALLED_BAM}" > "${FASTQ_FILE}"
 
 echo "[$(date)] Step 3: Aligning..."
-
 if [ "${ALIGNMENT_TYPE}" = "rna" ]; then
     MINIMAP_OPTS="-ax splice -y --secondary=no"
 else
@@ -94,23 +96,42 @@ fi
 ${MINIMAP2_PATH} ${MINIMAP_OPTS} "${REFERENCE_GENOME}" "${FASTQ_FILE}" > "${SAM_FILE}"
 
 echo "[$(date)] Step 4: Sorting..."
-
 samtools sort -@ ${THREADS} -o "${SORTED_BAM}" "${SAM_FILE}"
 samtools index "${SORTED_BAM}"
-
 rm "${SAM_FILE}"
 
 echo "[$(date)] Alignment complete!"
 
 # ==================== STATS ====================
 echo "[$(date)] Generating statistics..."
-
 samtools flagstat "${SORTED_BAM}" > "${OUTPUT_DIR}/${SAMPLE_NAME}_stats.txt"
+
+# ==================== MODKIT PILEUP ====================
+echo "[$(date)] Step 5: ModKit pileup..."
+MOD_THRESH_ARGS=""
+for t in "${MODKIT_THRESHOLDS[@]}"; do
+    MOD_THRESH_ARGS+=" --mod-threshold ${t}"
+done
+
+MOTIF_ARGS=""
+for m in "${MOTIFS[@]}"; do
+    MOTIF_ARGS+=" --motif ${m}"
+done
+
+apptainer exec --bind /ourdisk:/mnt ${APPTAINER_IMAGE} \
+    ${MODKIT_PATH} pileup \
+    ${MOD_THRESH_ARGS} \
+    ${MOTIF_ARGS} \
+    --ref "${REFERENCE_GENOME}" \
+    "${SORTED_BAM}" \
+    "${PILEUP_BED}"
+
+echo "[$(date)] ModKit pileup complete!"
 
 echo "=========================================="
 echo "Pipeline Complete!"
 echo "Basecalled: ${BASECALLED_BAM}"
 echo "Aligned: ${SORTED_BAM}"
 echo "Stats: ${OUTPUT_DIR}/${SAMPLE_NAME}_stats.txt"
+echo "Pileup: ${PILEUP_BED}"
 echo "=========================================="
-```
