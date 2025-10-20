@@ -47,3 +47,7 @@ basecalled.fastq (.bam) - both dorado outputs
 aligned.sam - minimap2 output
 alignment_sorted - SAMtools sorted aligned file
 **stats.txt - SAMtools flagstat output (total reads, aligned reads, alignment %)**
+
+### After Pipeline
+
+To extract the stats out of the pileup output from modkit, run the rna_modificationcount.R Rscript. Change the codes and any other important features to be DNA focused rather than RNA.
