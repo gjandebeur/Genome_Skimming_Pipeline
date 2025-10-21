@@ -4,10 +4,13 @@ Repository contains the scripts to install and run software to identify modifica
 
 
 ## Whats Included
-  -README.md \n
-  -installation.sh \n
-  -pipeline.sh \n
-  -RNA_ModkitCounts.R \n
+  -README.md 
+  
+  -installation.sh 
+  
+  -pipeline.sh 
+  
+  -RNA_ModkitCounts.R 
 
 ## Requirements
 
@@ -38,17 +41,17 @@ All installations will occur within the specific directory the script was run in
 To run the pipeline, first alter the #USER INPUTS# section of the pipeline.sh script.
 This contains the input pod5 directory of raw reads. the sample name, paths to each installation discussed above, and importantly, the parameters
 
-Parameters are currently set for RNA sequencing. To change to DNA alter; \n
-  -MODEL (https://github.com/nanoporetech/dorado) \n
-  -MODIFICATIONS (change to DNA mods 5mC/5hmC...) \n 
-  -ALIGNMENT_TYPE (change 'rna' to 'dna' \n 
+Parameters are currently set for RNA sequencing. To change to DNA alter; 
+  -MODEL (https://github.com/nanoporetech/dorado) 
+  -MODIFICATIONS (change to DNA mods 5mC/5hmC...)  
+  -ALIGNMENT_TYPE (change 'rna' to 'dna' 
 
 Pipeline is set up to load necessary dependencies and source to the users conda environment, and to run fully through the modification detection. 
 
-*Important outcome files* \n 
-basecalled.fastq (.bam) - both dorado outputs \n 
-aligned.sam - minimap2 output \n 
-alignment_sorted - SAMtools sorted aligned file \n
+*Important outcome files* 
+basecalled.fastq (.bam) - both dorado outputs 
+aligned.sam - minimap2 output 
+alignment_sorted - SAMtools sorted aligned file 
 **stats.txt - SAMtools flagstat output (total reads, aligned reads, alignment %)**
 
 ### After Pipeline
