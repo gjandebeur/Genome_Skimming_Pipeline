@@ -49,14 +49,20 @@ Parameters are currently set for RNA sequencing. To change to DNA alter;
   
   -ALIGNMENT_TYPE (change 'rna' to 'dna')
 
-### Pipeline is set up to load necessary dependencies and source to the users conda environment, and to run fully through the modification detection. 
 
-*Important outcome files* 
+Pipeline is set up to load necessary dependencies and source to the users conda environment, and to run fully through the modification detection. 
+
+**Important outcome files** 
+
 basecalled.fastq (.bam) - both dorado outputs 
+
 aligned.sam - minimap2 output 
+
 alignment_sorted - SAMtools sorted aligned file 
+
 **stats.txt - SAMtools flagstat output (total reads, aligned reads, alignment %)**
 
-### After Pipeline
+## After Pipeline Runs
 
-To extract the stats out of the pileup output from modkit, run the rna_modificationcount.R Rscript. Change the codes and any other important features to be DNA focused rather than RNA.
+To extract the stats out of the pileup output from modkit, run the rna_modificationcount.R Rscript. Modify the codes and any other key features to focus on DNA rather than RNA. 
+**I recommend removing samples without a minimum 10 n_valid_cov and keeping modkit thresholds at 0.99 for data accuracy**
