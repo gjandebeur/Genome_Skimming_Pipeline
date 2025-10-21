@@ -69,6 +69,11 @@ mkdir -p $APPTAINER_CACHEDIR $APPTAINER_TMPDIR
 
 INPUT_POD5_MNT=$(echo ${INPUT_POD5_DIR} | sed 's|^/[^/]*|/mnt|')
 
+#THIS PART MAY NEED SEPARATE RUN TO DOWNLOAD MODEL (This is how Dorado reads the mods)
+apptainer exec --nv --bind /ourdisk:/mnt ${APPTAINER_IMAGE} \
+    ${DORADO_PATH}/bin/dorado download --model all
+
+
 apptainer exec --nv --bind /ourdisk:/mnt ${APPTAINER_IMAGE} \
     ${DORADO_PATH}/bin/dorado basecaller \
     --models-directory ${DORADO_PATH}/${MODEL} \
