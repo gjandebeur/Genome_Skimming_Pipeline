@@ -49,6 +49,8 @@ Parameters are currently set for RNA sequencing. To change to DNA alter;
   
   -ALIGNMENT_TYPE (change 'rna' to 'dna')
 
+  -GCbias - for modkit with DNA you'll want to make sure you account for biases (like GC or CpG, check the github for info [https://github.com/nanoporetech/modkit](url)
+
 Importantly, for statistical purposes, change:
     
   -MIN-QSCORE =10. Currently set at 10 which is top 90%, but 20 is standard for DNA mods which removes any below 99%. This is the initial QC basecall filterings 
