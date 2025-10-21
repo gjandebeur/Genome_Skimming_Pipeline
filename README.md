@@ -49,6 +49,10 @@ Parameters are currently set for RNA sequencing. To change to DNA alter;
   
   -ALIGNMENT_TYPE (change 'rna' to 'dna')
 
+Importantly, for statistical purposes, change:
+    
+  -MIN-QSCORE =10. Currently set at 10 which is top 90%, but 20 is standard for DNA mods which removes any below 99%. This is the initial QC basecall filterings 
+  -For the R script, all modifications need to be switched to DNA for their respective codes.
 
 Pipeline is set up to load necessary dependencies and source to the users conda environment, and to run fully through the modification detection. 
 
