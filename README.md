@@ -42,11 +42,14 @@ To run the pipeline, first alter the #USER INPUTS# section of the pipeline.sh sc
 This contains the input pod5 directory of raw reads. the sample name, paths to each installation discussed above, and importantly, the parameters
 
 Parameters are currently set for RNA sequencing. To change to DNA alter; 
-  -MODEL (https://github.com/nanoporetech/dorado) 
-  -MODIFICATIONS (change to DNA mods 5mC/5hmC...)  
-  -ALIGNMENT_TYPE (change 'rna' to 'dna' 
 
-Pipeline is set up to load necessary dependencies and source to the users conda environment, and to run fully through the modification detection. 
+  -MODEL (https://github.com/nanoporetech/dorado) 
+
+  -MODIFICATIONS (change to DNA mods 5mC/5hmC...)  
+  
+  -ALIGNMENT_TYPE (change 'rna' to 'dna')
+
+### Pipeline is set up to load necessary dependencies and source to the users conda environment, and to run fully through the modification detection. 
 
 *Important outcome files* 
 basecalled.fastq (.bam) - both dorado outputs 
