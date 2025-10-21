@@ -31,7 +31,7 @@ APPTAINER_IMAGE="/scratch/$USER/apptainer_images/ubuntu20.sif"
 # Basecalling parameters
 MODEL="rna004_130bps_sup@v5.2.0"
 MODIFICATIONS="sup,inosine_m6A_2OmeA,2OmeG,m5C_2OmeC,pseU_2OmeU"
-MIN_QSCORE=10
+MIN_QSCORE=10        # QSCORE OF 10 IS ~90% . a QSCORE = 20 is standard for 99%. Likely will want 20 for publishable DNA modification results.
 
 # Alignment parameters
 ALIGNMENT_TYPE="rna"  # Options: "rna" or "dna"
