@@ -41,6 +41,7 @@ All installations will occur within the specific directory the script was run in
 To run the pipeline, first alter the #USER INPUTS# section of the pipeline.sh script.
 This contains the input pod5 directory of raw reads. the sample name, paths to each installation discussed above, and importantly, the parameters:
 
+
 Parameters are currently set for RNA sequencing. To change to DNA alter; 
 
   -MODEL (https://github.com/nanoporetech/dorado) 
@@ -54,9 +55,11 @@ Parameters are currently set for RNA sequencing. To change to DNA alter;
 Importantly, for statistical purposes, change:
     
   -MIN-QSCORE =10. Currently set at 10 which is top 90%, but 20 is standard for DNA mods which removes any below 99%. This is the initial QC basecall filterings 
+  
   -For the R script, all modifications need to be switched to DNA for their respective codes.
 
 Pipeline is set up to load necessary dependencies and source to the users conda environment, and to run fully through the modification detection. 
+
 
 **Important outcome files** 
 
@@ -69,6 +72,9 @@ alignment_sorted - SAMtools sorted aligned file
 **stats.txt - SAMtools flagstat output (total reads, aligned reads, alignment %)**
 
 pileup.bed - modkit output containing modification counts and location of mod
+
+
+
 ## After Pipeline Runs
 
 To extract the stats out of the pileup output from modkit, run the rna_modificationcount.R Rscript. Modify the codes and any other key features to focus on DNA rather than RNA.
