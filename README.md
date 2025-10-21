@@ -39,7 +39,7 @@ All installations will occur within the specific directory the script was run in
 ## Running the Pipeline
 
 To run the pipeline, first alter the #USER INPUTS# section of the pipeline.sh script.
-This contains the input pod5 directory of raw reads. the sample name, paths to each installation discussed above, and importantly, the parameters
+This contains the input pod5 directory of raw reads. the sample name, paths to each installation discussed above, and importantly, the parameters:
 
 Parameters are currently set for RNA sequencing. To change to DNA alter; 
 
@@ -66,7 +66,10 @@ alignment_sorted - SAMtools sorted aligned file
 
 **stats.txt - SAMtools flagstat output (total reads, aligned reads, alignment %)**
 
+pileup.bed - modkit output containing modification counts and location of mod
 ## After Pipeline Runs
 
-To extract the stats out of the pileup output from modkit, run the rna_modificationcount.R Rscript. Modify the codes and any other key features to focus on DNA rather than RNA. 
+To extract the stats out of the pileup output from modkit, run the rna_modificationcount.R Rscript. Modify the codes and any other key features to focus on DNA rather than RNA.
+
+**If specific locations are wanted to comparisons, use BEDtools intersect to map the bed file to the genome for correct coordinates.**
 **I recommend removing samples without a minimum 10 n_valid_cov and keeping modkit thresholds at 0.99 for data accuracy**
