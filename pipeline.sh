@@ -11,6 +11,9 @@
 echo "Linking the Conda environment to $ENV_PATH..."
 source /opt/oscer/software/Mamba/23.1.0-4/etc/profile.d/conda.sh
 
+module load GCC PyTorch FlexiBLAS/3.3.1-GCC-12.3.0 FFmpeg/4.4.2-GCCcore-11.3.0 HTSlib protobuf
+module load R/3.5.1-foss-2018b-Python-2.7.15
+module load SAMtools/1.16.1-GCC-11.3.0
 # ==================== USER INPUTS ====================
 # Sample info
 SAMPLE_NAME="sample1"
@@ -61,8 +64,6 @@ echo "=========================================="
 
 # ==================== BASECALLING ====================
 echo "[$(date)] Step 1: Basecalling..."
-module load GCC PyTorch FlexiBLAS/3.3.1-GCC-12.3.0 FFmpeg/4.4.2-GCCcore-11.3.0 HTSlib protobuf
-
 export APPTAINER_CACHEDIR=/scratch/$USER/apptainer_cache
 export APPTAINER_TMPDIR=/scratch/$USER/apptainer_tmp
 mkdir -p $APPTAINER_CACHEDIR $APPTAINER_TMPDIR
