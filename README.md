@@ -14,12 +14,11 @@ Repository contains the scripts to install and run software to identify modifica
 
 ## Requirements
 
-Scripts are designed to be run on OSCER (OU's supercomputer) using SLURM job scheduler.
+Scripts are designed to be run on OSCER (OU's supercomputer) or any HPC utilizing SLURM.
 
 Conda is used in this repository as a way to load in dependencies for each software.
 
 Apptainer is used to fulfill version mismatches for GLIBC2.18, a version OSCER has not been updated to run on yet. The apptainer also allows running of each software using its necessary dependencies that are preloaded (see installation script).
-
 
 # Quick Start
   After loading .sh scripts onto OSCER in respective directories. 
