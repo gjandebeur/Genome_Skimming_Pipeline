@@ -2,7 +2,6 @@
 This repository contains the workflow for basecalling, alignment, and modkit analysis of genetic data. Pipeline was built for RNA but can be altered for DNA with relative ease.
 Repository contains the scripts to install and run software to identify modification counts across genomic samples.
 
-
 ## Whats Included
   -README.md 
   
